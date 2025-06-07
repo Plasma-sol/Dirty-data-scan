@@ -31,8 +31,9 @@ if file is not None:
     remove_columns = st.multiselect("Remove Columns", options=df_columns, default=[])
 
     df = loader.filter_data(df, remove_columns)
-
     df = loader.standardise_nans(df)
+    
+
 
 
     st.header('Data Preview')
@@ -40,7 +41,25 @@ if file is not None:
     st.dataframe(df)
 
 
+########### Computing data quality metrics #################
+
+
+
+########## Show data quality report ###########
     st.header('Data Quality Report')
+    results_df = pd.read_csv("web/checker_result.csv")
+
+    missing_value_count = results_df['missing_values'] != 1
+    missing_value_count = sum(missing_value_count)
+    half_missing_value_count = results_df['missing_values'] < 0.5
+    half_missing_value_count = sum(half_missing_value_count)
+    st.write(f"Out of {len(results_df)} columns, {missing_value_count} have missing values.")
+    st.write(f"{half_missing_value_count} columns have less than 50% missing values.")
+    
+
+
+
+    st.markdown("This")
 
     def scorer(df):
         return 75
