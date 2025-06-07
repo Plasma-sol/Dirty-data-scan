@@ -29,8 +29,10 @@ if file is not None:
 
     st.write("Select the columns you would like to remove from the dataset")
     remove_columns = st.multiselect("Remove Columns", options=df_columns, default=[])
-    
+
     df = loader.filter_data(df, remove_columns)
+
+    df = loader.standardise_nans(df)
 
 
     st.header('Data Preview')
