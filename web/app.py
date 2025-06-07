@@ -1,7 +1,7 @@
 import streamlit as st
 import pathlib
 import pandas as pd
-import core.loader as loader
+from dataraccoon.core import loader
 
 st.title("DataRacoon")
 st.write('Your trash sifter')
