@@ -2,27 +2,26 @@ import pandas as pd
 import pathlib
 import numpy as np
 
-# def load_data(file_path):
-#     """
-#     Load data from a file path. Supports CSV, Excel, and JSON formats.
+def load_data(file_path):
+    """
+    Load data from a file path. Supports CSV, Excel, and JSON formats.
     
-#     Args:
-#         file_path (str): Path to the data file.
+    Args:
+        file_path (str): Path to the data file.
         
-#     Returns:
-#         pd.DataFrame: Loaded data as a DataFrame.
-#     """
- 
-#     file_path = pathlib.Path(file_path.name)
-
-#     if file_path.suffix == '.csv':
-#         return pd.read_csv(file_path)
-#     elif file_path.suffix in ['.xlsx', '.xls']:
-#         return pd.read_excel(file_path)
-#     elif file_path.suffix == '.json':
-#         return pd.read_json(file_path)
-#     else:
-#         raise ValueError("Unsupported file format. Please upload a CSV, Excel, or JSON file.")
+    Returns:
+        pd.DataFrame: Loaded data as a DataFrame.
+    """
+    file_path = pathlib.Path(file_path)
+    
+    if file_path.suffix == '.csv':
+        return pd.read_csv(file_path)
+    elif file_path.suffix in ['.xlsx', '.xls']:
+        return pd.read_excel(file_path)
+    elif file_path.suffix == '.json':
+        return pd.read_json(file_path)
+    else:
+        raise ValueError("Unsupported file format. Please upload a CSV, Excel, or JSON file.")
     
 
 def get_column_names(df: pd.DataFrame) -> list[str]:
@@ -37,8 +36,6 @@ def get_column_names(df: pd.DataFrame) -> list[str]:
         list[str]: List of column names.
     """
     return df.columns.tolist() if df is not None else []
-
-
 
 def filter_data(df: pd.DataFrame, remove_column: list[str] = []) -> pd.DataFrame:
     """
@@ -59,7 +56,6 @@ def filter_data(df: pd.DataFrame, remove_column: list[str] = []) -> pd.DataFrame
             df = df.drop(columns=column)
  
     return df.reset_index(drop=True)
-
 
 def standardise_nans(df, additional_na_values = [], output_nan_type=pd.NA):
 
@@ -95,7 +91,6 @@ def standardise_nans(df, additional_na_values = [], output_nan_type=pd.NA):
             df[column] = df[column].replace(r'^\s*$', output_nan_type, regex=True)
     
     return df
-
 
 # def nan_standardisation(df: pd.DataFrame) -> pd.DataFrame:
 #     """

@@ -1,12 +1,12 @@
 import streamlit as st
 import pathlib
 import pandas as pd
-from dataraccoon.core import loader
+import dataraccoon.core.loader as loader
 
 st.title("DataRacoon")
-st.write('Your trash sifter')
+st.write('Your personal AI Raccoon Agent')
 
-st.write("This is a placeholder for the PuriData application.")
+st.write("This is a placeholder for the DataRaccoon application.")
 st.write("More features will be added soon.")
 
 
@@ -23,14 +23,16 @@ st.header("Input data")
 
 file = st.file_uploader("Upload your dataset here", type=["csv", "xlsx", "json"])
 if file is not None:
+    df = pd.read_csv(file)
 
-    df = loader.load_data(file)
-    
     df_columns = loader.get_column_names(df)
 
     st.write("Select the columns you would like to remove from the dataset")
     remove_columns = st.multiselect("Remove Columns", options=df_columns, default=[])
+
     df = loader.filter_data(df, remove_columns)
+
+    df = loader.standardise_nans(df)
 
 
     st.header('Data Preview')
