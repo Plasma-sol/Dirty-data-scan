@@ -1,26 +1,27 @@
 import pandas as pd
 import pathlib
 
-def load_data(file_path):
-    """
-    Load data from a file path. Supports CSV, Excel, and JSON formats.
+# def load_data(file_path):
+#     """
+#     Load data from a file path. Supports CSV, Excel, and JSON formats.
     
-    Args:
-        file_path (str): Path to the data file.
+#     Args:
+#         file_path (str): Path to the data file.
         
-    Returns:
-        pd.DataFrame: Loaded data as a DataFrame.
-    """
-    file_path = pathlib.Path(file_path)
-    
-    if file_path.suffix == '.csv':
-        return pd.read_csv(file_path)
-    elif file_path.suffix in ['.xlsx', '.xls']:
-        return pd.read_excel(file_path)
-    elif file_path.suffix == '.json':
-        return pd.read_json(file_path)
-    else:
-        raise ValueError("Unsupported file format. Please upload a CSV, Excel, or JSON file.")
+#     Returns:
+#         pd.DataFrame: Loaded data as a DataFrame.
+#     """
+ 
+#     file_path = pathlib.Path(file_path.name)
+
+#     if file_path.suffix == '.csv':
+#         return pd.read_csv(file_path)
+#     elif file_path.suffix in ['.xlsx', '.xls']:
+#         return pd.read_excel(file_path)
+#     elif file_path.suffix == '.json':
+#         return pd.read_json(file_path)
+#     else:
+#         raise ValueError("Unsupported file format. Please upload a CSV, Excel, or JSON file.")
     
 
 def get_column_names(df: pd.DataFrame) -> list[str]:
