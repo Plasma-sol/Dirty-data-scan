@@ -8,3 +8,11 @@ dependencies = [
     "scipy>=1.15.3",
     "streamlit>=1.45.1",
 ]
+
+packages = [
+    { include = "likeminds", from = "src" }
+]
+
+[build-system]
+requires = ['hatchling']
+build-backend = 'hatchling.build'
