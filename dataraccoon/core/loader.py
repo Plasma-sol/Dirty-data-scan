@@ -1,5 +1,6 @@
 import pandas as pd
 import pathlib
+import numpy as np
 
 # def load_data(file_path):
 #     """
@@ -58,6 +59,42 @@ def filter_data(df: pd.DataFrame, remove_column: list[str] = []) -> pd.DataFrame
             df = df.drop(columns=column)
  
     return df.reset_index(drop=True)
+
+
+def standardise_nans(df, additional_na_values = [], output_nan_type=pd.NA):
+
+    # Create a copy to avoid modifying the original DataFrame
+    df = df.copy()
+    
+    # List of values to be considered as NA
+    na_values = [
+        None,           # Python None
+        np.nan,         # NumPy NaN
+        pd.NA,
+        '',            # Empty string
+        'nan',         # String 'nan'
+        'NaN',         # String 'NaN'
+        'NA',          # String 'NA'
+        'null',        # String 'null'
+        'NULL',        # String 'NULL'
+        'None'         # String 'None'
+    ]
+    na_values += additional_na_values  # Add any additional NA values provided by the user
+    
+    # Replace all NA-like values with pd.NA
+    for column in df.columns:
+        # For numeric columns, first convert np.nan to pd.NA
+        if pd.api.types.is_numeric_dtype(df[column]):
+            df[column] = df[column].replace({np.nan: output_nan_type})
+        
+        # For all columns, replace various NA values
+        df[column] = df[column].replace(na_values, output_nan_type)
+        
+        # Handle empty strings in object/string columns
+        if pd.api.types.is_string_dtype(df[column]) or pd.api.types.is_object_dtype(df[column]):
+            df[column] = df[column].replace(r'^\s*$', output_nan_type, regex=True)
+    
+    return df
 
 
 # def nan_standardisation(df: pd.DataFrame) -> pd.DataFrame:
