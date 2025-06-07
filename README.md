@@ -1,4 +1,4 @@
-# DirtyData
+# DirtyDataScan
 
 An automated tool for assessing data quality with specialized support for biobank datasets. Provides a "dirty score" (0-100) and actionable recommendations to improve data quality and determine "insight readiness".
 
