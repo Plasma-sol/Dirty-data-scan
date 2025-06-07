@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from statsmodels.stats.missingnorm import littles_mcar_test
+# from statsmodels.stats.missingnorm import littles_mcar_test
 
 
 class Checker():
@@ -34,14 +34,14 @@ class Checker():
         duplicate_count = df.duplicated().sum()
         return pd.DataFrame({'duplicate_count': [duplicate_count]})
     
-    @staticmethod
-    def mcar_test(df: pd.DataFrame) -> pd.DataFrame:
-        numeric_df = df.select_dtypes(include=[np.number])
-        if numeric_df.empty:
-            return None
-        _, pvalue = littles_mcar_test(numeric_df)
+    # @staticmethod
+    # def mcar_test(df: pd.DataFrame) -> pd.DataFrame:
+    #     numeric_df = df.select_dtypes(include=[np.number])
+    #     if numeric_df.empty:
+    #         return None
+    #     _, pvalue = littles_mcar_test(numeric_df)
 
-        return pvalue
+    #     return pvalue
 
     def run(self, df) -> pd.DataFrame:
         """
@@ -63,5 +63,5 @@ if __name__ == "__main__":
     checker = Checker()
     result = checker.run(df)
     print(result)
-    print(Checker.mcar_test(df))
-
+    # print(Checker.mcar_test(df))
+    result.to_csv('../examples/checker_result.csv', index=False)
