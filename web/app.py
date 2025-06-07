@@ -2,6 +2,7 @@ import streamlit as st
 import pathlib
 import pandas as pd
 import dataraccoon.core.loader as loader
+import dataraccoon.checkers.outliers as outliers
 
 st.title("DataRacoon")
 st.write('Your personal AI Raccoon Agent')
@@ -32,6 +33,8 @@ if file is not None:
 
     df = loader.filter_data(df, remove_columns)
     df = loader.standardise_nans(df)
+
+
     
 
 
@@ -56,7 +59,11 @@ if file is not None:
     st.write(f"Out of {len(results_df)} columns, {missing_value_count} have missing values.")
     st.write(f"{half_missing_value_count} columns have less than 50% missing values.")
     
+    outlier_output = outliers.analyze_outliers(df, cols=None)
 
+    st.write("Outlier Analysis Results:")
+    for key, value in outlier_output.items():
+       st.write(f"{key}: {value}")
 
 
     st.markdown("This")

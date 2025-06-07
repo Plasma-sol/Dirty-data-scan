@@ -186,6 +186,6 @@ if __name__ == "__main__":
     df_clean2 = remove_outliers(df, method='by_column')
     
 
-test = pd.read_csv('https://raw.githubusercontent.com/Plasma-sol/Dirty-data-scan/refs/heads/main/examples/test1.csv?token=GHSAT0AAAAAADFIIAZZ4UTGLGPYPRIADAB22CELFCA')
+# test = pd.read_csv('https://raw.githubusercontent.com/Plasma-sol/Dirty-data-scan/refs/heads/main/examples/test1.csv?token=GHSAT0AAAAAADFIIAZZ4UTGLGPYPRIADAB22CELFCA')
 
-analyze_outliers(test, threshold=3)
+# analyze_outliers(test, threshold=3)
