@@ -64,6 +64,23 @@ st.markdown(f"""
 st.title("DataRacoon")
 st.write('Your personal trash data connoisseur')
 
+st.markdown("""
+Welcome to *DataRaccoon* – the tool that knows quality trash when it sees it! 
+
+Just like our furry friends who can spot the good stuff in any garbage pile, DataRaccoon expertly *sifts through your data* to find what's clean, what's messy, and what needs a good scrub.
+
+### What DataRaccoon Does:
+•⁠  ⁠🔍 *Sniffs out data quality issues* with scientific precision
+•⁠  ⁠📊 *Delivers a cleanliness score* (0-100) in seconds  
+•⁠  ⁠🎯 *Provides actionable recommendations* to clean up your mess
+•⁠  ⁠🧬 *Specializes in research data* across all scientific disciplines
+
+Because good science starts with clean data – and DataRaccoon knows trash better than anyone.
+
+---
+"""
+)
+
 # st.write("This is a placeholder for the DataRaccoon application.")
 # st.write("More features will be added soon.")
 
