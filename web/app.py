@@ -9,11 +9,12 @@ import plotter as plotter
 import altair
 import base64
 
+st.set_page_config(layout="wide")
 def recommendation(score):
     if score >= 75:
         return 'strongly recommend'
     if score >= 50:
-        return 'reconmend'
+        return 'recommend'
     if score < 50:
         return 'advise against'
     elif score <= 25:
