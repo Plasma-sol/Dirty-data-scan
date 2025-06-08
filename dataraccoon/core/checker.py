@@ -1,11 +1,14 @@
 import pandas as pd
 import numpy as np
 from scipy.stats import chi2
-
+from ..checkers.outliers import analyze_outliers
+from ..checkers.correlation import correlation_matrix
 
 class Checker():
     def __init__(self):
-        pass
+        self.outliers = analyze_outliers
+        self.correlation = correlation_matrix
+
     @staticmethod
     def completeness(df: pd.DataFrame) -> pd.DataFrame:
         """
@@ -91,5 +94,9 @@ if __name__ == "__main__":
     checker = Checker()
     result = checker.run(df)
     print(result)
+    outs = checker.outliers(df)
+    print(outs)
+    corr = checker.correlation(df)
+    print(corr)
     # print(Checker.mcar_test(df))
     # result.to_csv('../examples/checker_result.csv', index=False)
