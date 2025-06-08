@@ -195,7 +195,7 @@ if file is not None:
 
         st.subheader("Duplicates")
 
-        st.markdown(f'You currently have **{duplicates.duplicate_count.values[0]} duplicate rows** in your dataset, representing **{duplicates.duplicate_count.values[0]/dimensions[0]}%** of your dataset.')
+        st.markdown(f'You currently have **{duplicates.duplicate_count.values[0]} duplicate rows** in your dataset, representing **{duplicates.duplicate_count.values[0]/dimensions[0]:.0f}%** of your dataset.')
 
         st.subheader("Correlated columns")
 
