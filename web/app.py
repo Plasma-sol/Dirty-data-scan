@@ -1,9 +1,9 @@
 import streamlit as st
 import pathlib
 import pandas as pd
-import dataraccoon.core.loader as loader
-import dataraccoon.core.checkers.outliers as outliers
-import dataraccoon.core.checker as checker
+import dataraccoon.loader as loader
+import dataraccoon.checkers.outliers as outliers
+import dataraccoon.checker as checker
 import dataraccoon.scorers.score_calculator as score_calculator
 import plotter as plotter
 import altair
@@ -23,7 +23,7 @@ def recommendation(score):
 
 
 
-st.image("web/trash.jpeg", width=200)
+st.image("web/dataraccoon.png", width=200)
 st.title("DataRacoon")
 st.write('Your personal trash data connoisseur')
 
@@ -34,7 +34,7 @@ st.write('Your personal trash data connoisseur')
 ############ SIDEBAR SECTION ############
 
 with st.sidebar:
-    st.logo("web/trash.jpeg", size='large')
+    st.logo("web/dataraccoon.png", size='large')
     st.header("Input data")
     st.write("Please upload your dataset in CSV format.")
     file = st.file_uploader("Upload your dataset here", type=["csv", "xlsx", "json"])
