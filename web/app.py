@@ -89,7 +89,7 @@ if file is not None:
         donut_chart = plotter.make_donut(score, "Data Quality Score")
         st.altair_chart(donut_chart, use_container_width=True)
 
-        st.write(f'From this score we would **{recommendation(score)}** using this dataset for further analysis.')
+        st.write(f'From this score we would **{recommendation(score)}** using this dataset for further analysis without further preprocessing.')
 
     with col2:
 
