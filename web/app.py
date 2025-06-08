@@ -4,6 +4,7 @@ import pandas as pd
 import dataraccoon.core.loader as loader
 import dataraccoon.core.checkers.outliers as outliers
 import dataraccoon.core.checker as checker
+import dataraccoon.scorers.score_calculator as score_calculator
 import plotter as plotter
 import altair
 
@@ -60,13 +61,32 @@ if file is not None:
 
     checker = checker.Checker()
     dimensions, completeness, duplicates, outs, correlations = checker.run(df)
-    # st.write(completeness)
+    st.write(completeness)
+    poor_completeness = completeness[completeness < 0.5]
+    poor_completeness_df = pd.DataFrame(poor_completeness, columns=['Missing values'])
+    poor_completeness_df['Missing values'] = 1 - poor_completeness_df['Missing values']
+    poor_completeness_df = poor_completeness_df.sort_values(by='Missing values', ascending=False).reset_index()
     # st.write(dimensions)
     # st.write(completeness)
     # st.write(duplicates)
     # st.write(outs)
     # st.write(pd.DataFrame(correlations))
     correlations_df = pd.DataFrame(correlations)
+
+    num_duplicates = duplicates.duplicate_count.values[0]
+
+    scorer_results = score_calculator.calculate_overall_dataset_score(
+        values=completeness,
+        num_duplicates=num_duplicates,
+        correlation_df=correlations_df,
+        avg_zscore=outs['avg_of_column_averages'],
+        dim1=dimensions[0],
+        dim2=dimensions[1]
+
+    )
+    score = scorer_results['percentage']
+
+
 
 
 
@@ -76,9 +96,9 @@ if file is not None:
 
     col1, col2 = st.columns(2)
 
-    def scorer(df):
-        return 25
-    score = scorer(df)
+    # def scorer(df):
+    #     return 25
+    # score = scorer(df)
 
 
     with col1:
@@ -89,7 +109,7 @@ if file is not None:
         donut_chart = plotter.make_donut(score, "Data Quality Score")
         st.altair_chart(donut_chart, use_container_width=True)
 
-        st.write(f'From this score we would **{recommendation(score)}** using this dataset for further analysis without further preprocessing.')
+        st.write(f'From this score we would **{recommendation(score)}** using this dataset for downstream analysis without further preprocessing.')
 
     with col2:
 
@@ -101,6 +121,8 @@ if file is not None:
         half_missing_value_count = sum(half_missing_value_count)
         st.write(f"Out of {len(completeness)} columns, {missing_value_count} have missing values.")
         st.write(f"**{half_missing_value_count} columns** have more than 50% missing values.")
+        st.write("Here is a list of columns with more than 50% missing values:")
+        st.dataframe(poor_completeness_df)
         
         # outlier_output = outliers.analyze_outliers(df, cols=None)
 

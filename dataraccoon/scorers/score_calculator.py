@@ -208,7 +208,7 @@ if __name__ == "__main__":
 #  completeness_df = pd.read_csv(r'C:\Users\verdu\OneDrive\Documentos\dirtydata\Dirty-data-scan\examples\completeness.csv')
 
 # # # Read correlation analysis (dictionary)
-  correlation_df = pd.read_pickle(r'C:\Users\verdu\OneDrive\Documentos\dirtydata\Dirty-data-scan\examples\correlation.pkl')
+    correlation_df = pd.read_pickle(r'C:\Users\verdu\OneDrive\Documentos\dirtydata\Dirty-data-scan\examples\correlation.pkl')
 
 # # # Read outliers (Z-scores)
 #  outliers_df = pd.read_pickle(r'C:\Users\verdu\OneDrive\Documentos\dirtydata\Dirty-data-scan\examples\outliers.pkl')
