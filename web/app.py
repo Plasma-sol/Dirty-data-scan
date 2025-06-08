@@ -3,6 +3,8 @@ import pathlib
 import pandas as pd
 import dataraccoon.core.loader as loader
 import dataraccoon.checkers.outliers as outliers
+import plotter as plotter
+import altair
 
 st.title("DataRacoon")
 st.write('Your personal AI Raccoon Agent')
@@ -12,17 +14,12 @@ st.write("More features will be added soon.")
 
 
 ############ SIDEBAR SECTION ############
-st.sidebar.title("Navigation")
-st.sidebar.write("Use the sidebar to navigate through the application.")
 
-st.sidebar.write("Currently, this application is under development.")
-st.sidebar.write("Stay tuned for updates and new features!")
+with st.sidebar:
+    st.header("Input data")
+    st.write("Please upload your dataset in CSV format.")
+    file = st.file_uploader("Upload your dataset here", type=["csv", "xlsx", "json"])
 
-
-
-st.header("Input data")
-
-file = st.file_uploader("Upload your dataset here", type=["csv", "xlsx", "json"])
 if file is not None:
     df = pd.read_csv(file)
 
@@ -49,33 +46,42 @@ if file is not None:
 
 
 ########## Show data quality report ###########
+
     st.header('Data Quality Report')
+
+    col1, col2 = st.columns(2)
 
     def scorer(df):
         return 75
     score = scorer(df)
 
-    st.metric(label="Data Quality Score", value=score, delta=None, delta_color="normal", help=None, border=True)
 
+    with col1:
+        st.subheader("Data Quality Score")
+        st.write("This score is based on the data quality metrics computed from your dataset.")
+        st.write("The score is calculated based on various factors such as missing values, outliers, and data consistency.")
 
+        donut_chart = plotter.make_donut(score, "Data Quality Score")
+        st.altair_chart(donut_chart, use_container_width=True)
 
+    with col2:
 
-    results_df = pd.read_csv("web/checker_result.csv")
+        results_df = pd.read_csv("web/checker_result.csv")
+        st.subheader("Missing Values")
+        missing_value_count = results_df['missing_values'] != 1
+        missing_value_count = sum(missing_value_count)
+        half_missing_value_count = results_df['missing_values'] < 0.5
+        half_missing_value_count = sum(half_missing_value_count)
+        st.write(f"Out of {len(results_df)} columns, {missing_value_count} have missing values.")
+        st.write(f"**{half_missing_value_count} columns** have more than 50% missing values.")
+        
+        outlier_output = outliers.analyze_outliers(df, cols=None)
 
-    missing_value_count = results_df['missing_values'] != 1
-    missing_value_count = sum(missing_value_count)
-    half_missing_value_count = results_df['missing_values'] < 0.5
-    half_missing_value_count = sum(half_missing_value_count)
-    st.write(f"Out of {len(results_df)} columns, {missing_value_count} have missing values.")
-    st.write(f"**{half_missing_value_count} columns** have more than 50% missing values.")
-    
-    outlier_output = outliers.analyze_outliers(df, cols=None)
+        st.subheader("Outlier Analysis")
 
-    st.markdown("## Outlier Analysis Results:")
-
-    st.markdown(f'In total there are **{outlier_output['total_outlier_datapoints']} outliers** in your dataset.')
-    # for key, value in outlier_output.items():
-    #    st.write(f"{key}: {value}")
+        st.markdown(f'In total there are **{outlier_output['total_outlier_datapoints']} outliers** in your dataset.')
+        # for key, value in outlier_output.items():
+        #    st.write(f"{key}: {value}")
 
 
 
