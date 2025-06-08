@@ -2,7 +2,7 @@ import streamlit as st
 import pathlib
 import pandas as pd
 import dataraccoon.core.loader as loader
-import dataraccoon.checkers.outliers as outliers
+import dataraccoon.core.checkers.outliers as outliers
 import plotter as plotter
 import altair
 
@@ -52,7 +52,7 @@ if file is not None:
     col1, col2 = st.columns(2)
 
     def scorer(df):
-        return 75
+        return 25
     score = scorer(df)
 
 
