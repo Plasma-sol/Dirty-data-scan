@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import pickle
 from scipy.stats import chi2
 from scipy import stats
 
@@ -344,6 +345,14 @@ if __name__ == "__main__":
     df = pd.read_csv('../../examples/test1.csv')
     checker = Checker()
     data = checker.run(df)
+    with open('../../examples/dimensions.txt', 'w') as f:
+        f.write(f"Dimensions of the DataFrame: {data[0]}\n")
+    data[1].to_csv('../../examples/completeness.csv', index=False)
+    data[2].to_csv('../../examples/duplicates.csv', index=False)
+    with open('../../examples/outliers.pkl', 'wb') as f:
+        pickle.dump(data[3], f)
+    with open('../../examples/correlation.pkl', 'wb') as f:
+        pickle.dump(data[4], f)
     # complete_and_duplicates = checker.run(df)
     # outliers = checker.analyze_outliers(df)
     # corr = checker.get_all_correlation_pairs(df)
