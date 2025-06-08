@@ -152,6 +152,6 @@ if __name__ == "__main__":
     print(f"\nOverall average z-score of all outliers: {analysis['overall_avg_outlier_z_score']:.2f}")
     print(f"Average z-scores per column: {analysis['avg_z_scores_per_column']}")
 
-test = pd.read_csv('https://raw.githubusercontent.com/Plasma-sol/Dirty-data-scan/refs/heads/main/examples/test1.csv?token=GHSAT0AAAAAADFIIAZZ5ZIS2ESZJ2KGUVDC2CEMYTA')
+# test = pd.read_csv('https://raw.githubusercontent.com/Plasma-sol/Dirty-data-scan/refs/heads/main/examples/test1.csv?token=GHSAT0AAAAAADFIIAZZ5ZIS2ESZJ2KGUVDC2CEMYTA')
 
-analyze_outliers(test, threshold=3)
+# analyze_outliers(test, threshold=3)

@@ -50,6 +50,16 @@ if file is not None:
 
 ########## Show data quality report ###########
     st.header('Data Quality Report')
+
+    def scorer(df):
+        return 75
+    score = scorer(df)
+
+    st.metric(label="Data Quality Score", value=score, delta=None, delta_color="normal", help=None, border=True)
+
+
+
+
     results_df = pd.read_csv("web/checker_result.csv")
 
     missing_value_count = results_df['missing_values'] != 1
@@ -57,19 +67,28 @@ if file is not None:
     half_missing_value_count = results_df['missing_values'] < 0.5
     half_missing_value_count = sum(half_missing_value_count)
     st.write(f"Out of {len(results_df)} columns, {missing_value_count} have missing values.")
-    st.write(f"{half_missing_value_count} columns have less than 50% missing values.")
+    st.write(f"**{half_missing_value_count} columns** have more than 50% missing values.")
     
     outlier_output = outliers.analyze_outliers(df, cols=None)
 
-    st.write("Outlier Analysis Results:")
-    for key, value in outlier_output.items():
-       st.write(f"{key}: {value}")
+    st.markdown("## Outlier Analysis Results:")
+
+    st.markdown(f'In total there are **{outlier_output['total_outlier_datapoints']} outliers** in your dataset.')
+    # for key, value in outlier_output.items():
+    #    st.write(f"{key}: {value}")
 
 
-    st.markdown("This")
 
-    def scorer(df):
-        return 75
+    def recommendation(score):
+        if score >= 75:
+            return 'strongly recommend'
+        if score >= 50:
+            return 'reconmend'
+        if score < 50:
+            return 'advise against'
+        elif score <= 25:
+            return "strongly advise against."
+        else:
+            return "Your data quality is good. Keep it up!"
 
-    score = scorer(df)
-    st.write(f"Data Quality Score: {score}/100")
+    st.write(f'From this score we would **{recommendation(score)}** using this dataset for further analysis.')
