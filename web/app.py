@@ -7,16 +7,33 @@ import dataraccoon.core.checker as checker
 import plotter as plotter
 import altair
 
-st.title("DataRacoon")
-st.write('Your personal AI Raccoon Agent')
+def recommendation(score):
+    if score >= 75:
+        return 'strongly recommend'
+    if score >= 50:
+        return 'reconmend'
+    if score < 50:
+        return 'advise against'
+    elif score <= 25:
+        return "strongly advise against."
+    else:
+        return "Your data quality is good. Keep it up!"
 
-st.write("This is a placeholder for the DataRaccoon application.")
-st.write("More features will be added soon.")
+
+
+
+st.image("web/trash.jpeg", width=200)
+st.title("DataRacoon")
+st.write('Your personal trash data connoisseur')
+
+# st.write("This is a placeholder for the DataRaccoon application.")
+# st.write("More features will be added soon.")
 
 
 ############ SIDEBAR SECTION ############
 
 with st.sidebar:
+    st.logo("web/trash.jpeg", size='large')
     st.header("Input data")
     st.write("Please upload your dataset in CSV format.")
     file = st.file_uploader("Upload your dataset here", type=["csv", "xlsx", "json"])
@@ -72,6 +89,8 @@ if file is not None:
         donut_chart = plotter.make_donut(score, "Data Quality Score")
         st.altair_chart(donut_chart, use_container_width=True)
 
+        st.write(f'From this score we would **{recommendation(score)}** using this dataset for further analysis.')
+
     with col2:
 
         # results_df = pd.read_csv("web/checker_result.csv")
@@ -104,25 +123,16 @@ if file is not None:
 
         st.subheader("Correlated columns")
 
+       
+
         correlations_df = correlations_df[correlations_df['correlation'] > 0.95]
         correlations_df = correlations_df[correlations_df['p_value'] < 0.05]
         correlations_df = correlations_df.sort_values(by='correlation', ascending=False).reset_index(drop=True)
+        st.markdown(f'You currently have **{len(correlations_df)} pairs of correlated columns** in your dataset. I would suggest having a look at these columns.')
         st.dataframe(correlations_df)
 
         
 
 
 
-    def recommendation(score):
-        if score >= 75:
-            return 'strongly recommend'
-        if score >= 50:
-            return 'reconmend'
-        if score < 50:
-            return 'advise against'
-        elif score <= 25:
-            return "strongly advise against."
-        else:
-            return "Your data quality is good. Keep it up!"
 
-    st.write(f'From this score we would **{recommendation(score)}** using this dataset for further analysis.')
