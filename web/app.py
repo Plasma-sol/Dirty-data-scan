@@ -54,13 +54,14 @@ if file is not None:
 
     st.header('Data Preview')
 
+    st.dataframe(df)
 
 
 ########### Computing data quality metrics #################
 
     checker = checker.Checker()
     dimensions, completeness, duplicates, outs, correlations = checker.run(df)
-    st.write(completeness)
+    # st.write(completeness)
     poor_completeness = completeness[completeness < 0.5]
     poor_completeness_df = pd.DataFrame(poor_completeness, columns=['Missing values'])
     poor_completeness_df['Missing values'] = 1 - poor_completeness_df['Missing values']
