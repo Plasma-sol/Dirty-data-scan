@@ -3,6 +3,7 @@ import pathlib
 import pandas as pd
 import dataraccoon.core.loader as loader
 import dataraccoon.core.checkers.outliers as outliers
+import dataraccoon.core.checker as checker
 import plotter as plotter
 import altair
 
@@ -21,7 +22,8 @@ with st.sidebar:
     file = st.file_uploader("Upload your dataset here", type=["csv", "xlsx", "json"])
 
 if file is not None:
-    df = pd.read_csv(file)
+    df = pd.read_csv(file, index_col=False)
+    df = df.drop(columns=['Unnamed: 0'], errors='ignore')  # Remove index column if it exists
 
     df_columns = loader.get_column_names(df)
 
@@ -32,16 +34,22 @@ if file is not None:
     df = loader.standardise_nans(df)
 
 
-    
-
-
-
     st.header('Data Preview')
 
     st.dataframe(df)
 
 
 ########### Computing data quality metrics #################
+
+    checker = checker.Checker()
+    dimensions, completeness, duplicates, outs, correlations = checker.run(df)
+    # st.write(completeness)
+    # st.write(dimensions)
+    # st.write(completeness)
+    # st.write(duplicates)
+    # st.write(outs)
+    # st.write(pd.DataFrame(correlations))
+    correlations_df = pd.DataFrame(correlations)
 
 
 
@@ -66,22 +74,42 @@ if file is not None:
 
     with col2:
 
-        results_df = pd.read_csv("web/checker_result.csv")
+        # results_df = pd.read_csv("web/checker_result.csv")
         st.subheader("Missing Values")
-        missing_value_count = results_df['missing_values'] != 1
+        missing_value_count = completeness != 1
         missing_value_count = sum(missing_value_count)
-        half_missing_value_count = results_df['missing_values'] < 0.5
+        half_missing_value_count = completeness < 0.5
         half_missing_value_count = sum(half_missing_value_count)
-        st.write(f"Out of {len(results_df)} columns, {missing_value_count} have missing values.")
+        st.write(f"Out of {len(completeness)} columns, {missing_value_count} have missing values.")
         st.write(f"**{half_missing_value_count} columns** have more than 50% missing values.")
         
-        outlier_output = outliers.analyze_outliers(df, cols=None)
+        # outlier_output = outliers.analyze_outliers(df, cols=None)
 
         st.subheader("Outlier Analysis")
 
-        st.markdown(f'In total there are **{outlier_output['total_outlier_datapoints']} outliers** in your dataset.')
+        st.markdown(f'In total there are **{outs['total_outlier_datapoints']} outliers** in your dataset, representing **{outs["overall_outlier_pct"]*100:.0f}%** of your dataset')
+        st.markdown(f'Here are the columns I would suggest having a deeper look into')
+        
+
+        avg_z_scores = outs['avg_z_scores_per_column']
+        avg_z_scores = pd.DataFrame({"Columns": avg_z_scores.keys(), "Z_scores": avg_z_scores.values()}).sort_values(by='Z_scores', ascending=False).reset_index(drop=True)
+        avg_z_scores = avg_z_scores[avg_z_scores['Z_scores'] >= 3.0]
+        st.dataframe(avg_z_scores)
         # for key, value in outlier_output.items():
         #    st.write(f"{key}: {value}")
+
+        st.subheader("Duplicates")
+
+        st.markdown(f'You currently have **{duplicates.duplicate_count.values[0]} duplicate rows** in your dataset, representing **{duplicates.duplicate_count.values[0]/dimensions[0]}%** of your dataset.')
+
+        st.subheader("Correlated columns")
+
+        correlations_df = correlations_df[correlations_df['correlation'] > 0.95]
+        correlations_df = correlations_df[correlations_df['p_value'] < 0.05]
+        correlations_df = correlations_df.sort_values(by='correlation', ascending=False).reset_index(drop=True)
+        st.dataframe(correlations_df)
+
+        
 
 
 
