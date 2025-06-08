@@ -333,16 +333,17 @@ class Checker():
         Returns:
             pd.DataFrame: A DataFrame containing the results of the checks.
         """
+        dimentions = df.shape
         completeness = self.completeness(df)
         duplicate = self.duplicate(df)
         outliers = self.analyze_outliers(df)
         corr = self.get_all_correlation_pairs(df)
-        return completeness, duplicate, outliers, corr
+        return dimentions, completeness, duplicate, outliers, corr
 
 if __name__ == "__main__":
     df = pd.read_csv('../../examples/test1.csv')
     checker = Checker()
-    duplicats = checker.duplicate(df)
+    data = checker.run(df)
     # complete_and_duplicates = checker.run(df)
     # outliers = checker.analyze_outliers(df)
     # corr = checker.get_all_correlation_pairs(df)
