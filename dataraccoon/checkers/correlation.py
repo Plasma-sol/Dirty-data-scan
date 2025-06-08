@@ -62,9 +62,11 @@ def correlation_matrix(data, method='pearson', round_digits=3, min_periods=1):
     else:
         raise TypeError("Input must be pandas DataFrame or numpy array")
 
-def corr_with_pvalues(data, method='pearson', round_digits=3, min_periods=1):
+def corr_with_pvalues(data, method='pearson', round_digits=3, min_periods=1, 
+                     high_corr_threshold=0.95, p_threshold=0.05):
     """
-    Compute correlation matrix with p-values (requires scipy), handling NaN values.
+    Compute correlation matrix with p-values (requires scipy), handling NaN values,
+    and identify highly correlated pairs.
     
     Parameters:
     -----------
@@ -76,10 +78,18 @@ def corr_with_pvalues(data, method='pearson', round_digits=3, min_periods=1):
         Decimal places to round
     min_periods : int, default 1
         Minimum number of valid observations required
+    high_corr_threshold : float, default 0.95
+        Absolute correlation threshold for identifying high correlations
+    p_threshold : float, default 0.05
+        P-value threshold for significance
         
     Returns:
     --------
-    tuple: (correlation_matrix, p_value_matrix)
+    dict: {
+        'correlation_matrix': correlation matrix,
+        'p_value_matrix': p-value matrix,
+        'high_corr_summary': summary of highly correlated pairs
+    }
     """
     try:
         from scipy.stats import pearsonr, spearmanr
@@ -143,7 +153,42 @@ def corr_with_pvalues(data, method='pearson', round_digits=3, min_periods=1):
             corr_df = corr_df.round(round_digits)
             p_df = p_df.round(round_digits)
         
-        return corr_df, p_df
+        # Find highly correlated pairs
+        high_corr_pairs = []
+        for i in range(n):
+            for j in range(i+1, n):  # Only upper triangle to avoid duplicates
+                corr_val = corr_matrix[i, j]
+                p_val = p_matrix[i, j]
+                
+                if (abs(corr_val) >= high_corr_threshold and 
+                    p_val <= p_threshold and 
+                    not np.isnan(corr_val) and 
+                    not np.isnan(p_val)):
+                    
+                    high_corr_pairs.append({
+                        'column1': columns[i],
+                        'column2': columns[j],
+                        'correlation': corr_val,
+                        'p_value': p_val,
+                        'abs_correlation': abs(corr_val)
+                    })
+        
+        # Sort by absolute correlation (highest first)
+        high_corr_pairs.sort(key=lambda x: x['abs_correlation'], reverse=True)
+        
+        # Create summary
+        summary = {
+            'total_pairs': len(high_corr_pairs),
+            'pairs': high_corr_pairs,
+            'threshold_used': high_corr_threshold,
+            'p_threshold_used': p_threshold
+        }
+        
+        return {
+            'correlation_matrix': corr_df,
+            'p_value_matrix': p_df,
+            'high_corr_summary': summary
+        }
     
     else:
         raise TypeError("corr_with_pvalues requires pandas DataFrame")
@@ -152,50 +197,8 @@ def corr_with_pvalues(data, method='pearson', round_digits=3, min_periods=1):
 if __name__ == "__main__":
     # Generate sample data with missing values
     np.random.seed(42)
-    data = pd.DataFrame({
-        'A': np.random.randn(100),
-        'B': np.random.randn(100),
-        'C': np.random.randn(100),
-        'D': np.random.randn(100)
-    })
-    
-    # Add some correlations
-    data['B'] = data['A'] * 0.7 + data['B'] * 0.3
-    data['C'] = data['A'] * -0.5 + data['C'] * 0.5
-    
-    # Add some missing values
-    data.loc[5:10, 'A'] = np.nan
-    data.loc[15:20, 'B'] = np.nan
-    data.loc[25:30, 'C'] = np.nan
-    
-    print(f"Data shape: {data.shape}")
-    print(f"Missing values per column:")
-    print(data.isnull().sum())
-    print()
-    
-    # Basic correlation matrix
-    corr = correlation_matrix(data)
-    print("Correlation Matrix:")
-    print(corr)
-    
-    # With different method and minimum periods
-    corr_spearman = correlation_matrix(data, method='spearman', min_periods=10)
-    print("Spearman Correlation (min 10 observations):")
-    print(corr_spearman)
-    
-    # With p-values (if scipy available)
-    try:
-        corr, p_values = corr_with_pvalues(data)
-        print("\nP-values:")
-        print(p_values)
-    except ImportError:
-        print("\nInstall scipy for p-values")
-    
-    # Using numpy array (convert DataFrame to numpy for testing)
-    numpy_data = data.values
-    corr_numpy = correlation_matrix(numpy_data)
-    print("\nNumpy array correlation:")
-    print(corr_numpy)
+
+
 
 test = pd.read_csv('https://raw.githubusercontent.com/Plasma-sol/Dirty-data-scan/refs/heads/main/examples/test1.csv?token=GHSAT0AAAAAADFIIAZZITZEW44V7Z2DFWEM2CENWQA')
 corr = correlation_matrix(test, method='pearson', round_digits=3)
