@@ -7,6 +7,7 @@ import dataraccoon.checker as checker
 import dataraccoon.scorers.score_calculator as score_calculator
 import plotter as plotter
 import altair
+import base64
 
 def recommendation(score):
     if score >= 75:
@@ -21,9 +22,45 @@ def recommendation(score):
         return "Your data quality is good. Keep it up!"
 
 
+def get_base64_image(image_path):
+    with open(image_path, "rb") as img_file:
+        return base64.b64encode(img_file.read()).decode()
 
+# CSS for teeter animation
+st.markdown("""
+<style>
+@keyframes raccoon-teeter {
+    0%, 90%, 100% { 
+        transform: rotate(0deg); 
+    }
+    20% { 
+        transform: rotate(-4deg); 
+    }
+    60% { 
+        transform: rotate(4deg); 
+    }
+}
 
-st.image("web/dataraccoon.png", width=200)
+.teeter-raccoon {
+    animation: raccoon-teeter 5s ease-in-out infinite;
+    transform-origin: bottom center;
+    display: block;
+    margin: 0 auto;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# Your raccoon image with animation
+img_base64 = get_base64_image("web/dataraccoon.png")  # or .jpeg
+st.markdown(f"""
+<div style="text-align: center; margin-bottom: 20px;">
+    <img src="data:image/png;base64,{img_base64}" 
+         class="teeter-raccoon" 
+         width="250">
+</div>
+""", unsafe_allow_html=True)
+
+# st.image("web/dataraccoon.png", width=200)
 st.title("DataRacoon")
 st.write('Your personal trash data connoisseur')
 
