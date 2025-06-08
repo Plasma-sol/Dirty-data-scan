@@ -335,20 +335,19 @@ class Checker():
         """
         completeness = self.completeness(df)
         duplicate = self.duplicate(df)
-        result = pd.concat([completeness, duplicate], axis=1)
-        result.columns = ['completeness', 'duplicate_count']
-        return result
-    
+        outliers = self.analyze_outliers(df)
+        corr = self.get_all_correlation_pairs(df)
+        return completeness, duplicate, outliers, corr
 
 if __name__ == "__main__":
     df = pd.read_csv('../../examples/test1.csv')
     checker = Checker()
-    complete_and_duplicates = checker.run(df)
-
-    outliers = checker.analyze_outliers(df)
-    corr = checker.get_all_correlation_pairs(df)
-    checker.print_correlation_pairs(corr)
-    print(corr)
-    print(complete_and_duplicates)
+    duplicats = checker.duplicate(df)
+    # complete_and_duplicates = checker.run(df)
+    # outliers = checker.analyze_outliers(df)
+    # corr = checker.get_all_correlation_pairs(df)
+    # checker.print_correlation_pairs(corr)
+    # print(corr)
+    # print(complete_and_duplicates)
     # print(Checker.mcar_test(df))
     # result.to_csv('../examples/checker_result.csv', index=False)
