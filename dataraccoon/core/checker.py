@@ -24,11 +24,19 @@ class Checker():
         dict: Contains outlier analysis results
         """
         df_copy = df.copy()
-    
+        print(df_copy.dtypes)
         # If no columns specified, use all numeric columns
+
+
+        for col in df_copy.columns:
+            df_copy[col] = pd.to_numeric(df_copy[col], errors='coerce')
+
+        
+
         if cols is None:
-            cols = df_copy.select_dtypes(include=[np.number]).columns.tolist()
-    
+            cols = df_copy.select_dtypes(include=[np.number, float, int]).columns.tolist()
+
+
         print(f"Analyzing outliers in columns: {cols}")
         print(f"Using threshold: {threshold} standard deviations\n")
     
@@ -161,16 +169,24 @@ class Checker():
         
         if not isinstance(data, pd.DataFrame):
             raise TypeError("Input must be pandas DataFrame")
+        data = data.copy()
+        for col in data.columns:
+            data[col] = pd.to_numeric(data[col], errors='coerce')
+
+        
+
+        # if cols is None:
+        #     cols = data.select_dtypes(include=[np.number, float, int]).columns.tolist()
         
         # Select only numeric columns
-        numeric_data = data.select_dtypes(include=['float64', 'float32', 'float16'])
+        numeric_data = data.select_dtypes(include=[np.number, float, int])
         
-        # If no float columns, try broader numeric selection
-        if numeric_data.empty:
-            numeric_data = data.select_dtypes(include=[np.number])
+        # # If no float columns, try broader numeric selection
+        # if numeric_data.empty:
+        #     numeric_data = data.select_dtypes(include=[np.number])
         
-        if numeric_data.empty:
-            raise ValueError("No numeric columns found in DataFrame")
+        # if numeric_data.empty:
+        #     raise ValueError("No numeric columns found in DataFrame")
         
         columns = numeric_data.columns
         n = len(columns)
