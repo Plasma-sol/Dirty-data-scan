@@ -61,9 +61,9 @@ def score_zscore_quality(avg_zscore):
     """
     Score dataset quality based on average Z-score.
     """
-    if avg_zscore <= 2.5:
+    if avg_zscore <= 3.5:
         score = 10
-    elif avg_zscore >= 4.5:
+    elif avg_zscore >= 5:
         score = 0
     else:
         score = 10 * (1 - (avg_zscore - 2.5) / (4.5 - 2.5))
