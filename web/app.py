@@ -61,7 +61,7 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # st.image("web/dataraccoon.png", width=200)
-st.title("DataRacoon")
+st.title("DataRaccoon")
 st.write('Your personal trash data connoisseur')
 
 st.markdown("""
