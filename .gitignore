@@ -144,7 +144,6 @@ uv.lock
 # Large datasets (adjust extensions as needed)
 *.h5
 *.hdf5
-*.pkl
 *.pickle
 
 # Temporary files
