@@ -107,7 +107,7 @@ if file is not None:
         st.subheader("Outlier Analysis")
 
         st.markdown(f'In total there are **{outs['total_outlier_datapoints']} outliers** in your dataset, representing **{outs["overall_outlier_pct"]*100:.0f}%** of your dataset')
-        st.markdown(f'Here are the columns I would suggest having a deeper look into')
+        st.markdown(f'Here are the columns I would suggest having a deeper look into, ranked by the ones you should probably focus on first:')
         
 
         avg_z_scores = outs['avg_z_scores_per_column']
@@ -123,12 +123,10 @@ if file is not None:
 
         st.subheader("Correlated columns")
 
-       
-
         correlations_df = correlations_df[correlations_df['correlation'] > 0.95]
         correlations_df = correlations_df[correlations_df['p_value'] < 0.05]
         correlations_df = correlations_df.sort_values(by='correlation', ascending=False).reset_index(drop=True)
-        st.markdown(f'You currently have **{len(correlations_df)} pairs of correlated columns** in your dataset. I would suggest having a look at these columns.')
+        st.markdown(f'You currently have **{len(correlations_df)} pairs of correlated columns** in your dataset. I would suggest having a look at these columns:')
         st.dataframe(correlations_df)
 
         
