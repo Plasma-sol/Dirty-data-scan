@@ -54,7 +54,6 @@ if file is not None:
 
     st.header('Data Preview')
 
-    st.dataframe(df)
 
 
 ########### Computing data quality metrics #################
